@@ -33,6 +33,12 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
+        
+        sessionStorage.setItem("session-value", "val session");
+        localStorage.setItem("local-value", "val local");
+
+        var divText = document.getElementById("storage");
+        divText.innerHTML = "Session value: " + sessionStorage.getItem("session-value") + " <br> Session value: " + localStorage.getItem("local-value");
 
         app.receivedEvent('deviceready');
     },
