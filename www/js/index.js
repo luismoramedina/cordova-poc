@@ -33,12 +33,9 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-        
-        sessionStorage.setItem("session-value", "val session");
-        localStorage.setItem("local-value", "val local");
 
-        var divText = document.getElementById("storage");
-        divText.innerHTML = "Session value: " + sessionStorage.getItem("session-value") + " <br> Session value: " + localStorage.getItem("local-value");
+        navigator.geolocation.getCurrentPosition(
+            app.onReceiveLocation, app.onError);
 
         app.receivedEvent('deviceready');
     },
@@ -52,6 +49,18 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
+    }, 
+
+    onReceiveLocation: function(location) {
+        console.error("setting location");
+        document.getElementById("gps").innerHTML = 
+            "Latittude: " + location.coords.latitude +
+            "<br>Longitude: " + location.coords.longitude +
+            "<br>Time: " + location.timestamp;
+    },
+
+    onError: function (err) {
+        alert(err.code + " : " + err.message);
     }
 };
 
