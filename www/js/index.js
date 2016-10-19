@@ -33,12 +33,11 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
-        
-        sessionStorage.setItem("session-value", "val session");
-        localStorage.setItem("local-value", "val local");
+        document.getElementById("butt").addEventListener("click", speed.doAlert);
 
-        var divText = document.getElementById("storage");
-        divText.innerHTML = "Session value: " + sessionStorage.getItem("session-value") + " <br> Session value: " + localStorage.getItem("local-value");
+        speed.beep();
+        speed.getInfoInterval();
+        compass.getInfo();
 
         app.receivedEvent('deviceready');
     },
@@ -52,6 +51,59 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
+    }
+};
+
+var speed = {
+    getInfo: function () {
+        console.log("on get info");
+        navigator.accelerometer.getCurrentAcceleration(speed.onReceive, speed.onError);
+    }, 
+    getInfoInterval: function () {
+        var options = {frequency: 2000};
+        var watchId = navigator.accelerometer.watchAcceleration(speed.onReceive, speed.onError, options);
+        console.log(watchId);
+    }, 
+    beep: function () {
+        var options = {frequency: 2000};
+        var watchId = navigator.accelerometer.watchAcceleration(speed.beepInterval, speed.onError, options);
+    }, 
+    doAlert: function () {
+        navigator.notification.alert("hello", speed.alertCB, "title", "OK");
+    },
+    beepInterval: function (speed) {
+        if (speed.x > 1) {
+            navigator.notification.beep(1);
+            navigator.notification.alert("hello", speed.alertCB, "title", "OK");
+        } else {
+            console.log("Noo beeping");
+        }
+    }, 
+    onReceive: function (speed) {
+        document.getElementById("speed").innerHTML = 
+            speed.x + "....";
+    }, 
+    alertCB: function () {
+        console.log("cb");
+    }, 
+    onError: function (error) {
+        console.log("error");
+        alert("speed!" + error.code);
+    }
+};
+
+var compass = {
+    getInfo: function () {
+        console.log("on get info");
+        navigator.compass.getCurrentHeading(compass.onReceive, compass.onError);
+    }, 
+    onReceive: function (compass) {
+        document.getElementById("compass").innerHTML = 
+            compass.magneticHeading + "....";
+    }, 
+    onError: function (error) {
+        console.log("error");
+        alert("speed!" + error.code);
     }
 };
 
