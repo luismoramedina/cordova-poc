@@ -34,11 +34,8 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         
-        sessionStorage.setItem("session-value", "val session");
-        localStorage.setItem("local-value", "val local");
-
-        var divText = document.getElementById("storage");
-        divText.innerHTML = "Session value: " + sessionStorage.getItem("session-value") + " <br> Session value: " + localStorage.getItem("local-value");
+        testplugin.functionTest(app.sCB, app.eCB, "1", "2");
+        console.log("MORA: despues functionTest")
 
         app.receivedEvent('deviceready');
     },
@@ -52,6 +49,12 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
+    },
+    sCB: function (data) {
+        alert(data);
+    },
+    sCB: function (error) {
+        alert(error);
     }
 };
 
