@@ -34,14 +34,37 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         
-        sessionStorage.setItem("session-value", "val session");
-        localStorage.setItem("local-value", "val local");
+        console.log("appcontacts: onDeviceReady");
 
-        var divText = document.getElementById("storage");
-        divText.innerHTML = "Session value: " + sessionStorage.getItem("session-value") + " <br> Session value: " + localStorage.getItem("local-value");
+        navigator.contacts.find(
+                [navigator.contacts.fieldType.displayName,
+                navigator.contacts.fieldType.photos],
+                app.getContactsCallback,
+                app.errorCallback
+            );
 
         app.receivedEvent('deviceready');
     },
+    getContactsCallback: function(data) {
+        var firsts = "";
+        var div = document.getElementById("contacts");
+        for (var i = 0; i < 200; i++) {
+//            firsts = firsts + " - " + data[i].displayName;
+            console.log(JSON.stringify(data[i]));
+            if (data[i].photos && data[i].photos.length > 0) {
+                if (data[i].photos[0].type === 'base64') {
+                div.innerHTML += div.innerHTML + "<img src='" + data[i].photos[0].value + "'>";                
+            }
+            }
+
+        }
+//        alert("appcontacts: data " + firsts);
+        
+    },
+    errorCallback: function(error) {
+        alert("appcontacts: error " + error.message);
+    },
+
     // Update DOM on a Received Event
     receivedEvent: function(id) {
         var parentElement = document.getElementById(id);
